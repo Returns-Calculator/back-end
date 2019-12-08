@@ -8,7 +8,7 @@ const server = express();
 
 // Library Middleware
 server.use(cors(), helmet(), express.json());
-// const authenticate = require("../middleware/auth-middleware");
+const authenticate = require("../middleware/auth-middleware");
 
 // Routers
 // const usersRouter = require("../controllers/user");
