@@ -10,10 +10,10 @@ exports.up = function(knex) {
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
 
-    symbols_details.string("date");
-    symbols_details.decimal("adjusted_close", null);
-    symbols_details.decimal("close", null);
-    symbols_details.decimal("dividend", null);
+    symbols_details.string("date").notNullable();
+    symbols_details.decimal("adjusted_close", null).notNullable();
+    symbols_details.decimal("close", null).notNullable();
+    symbols_details.decimal("dividend", null).notNullable();
 
     symbols_details.timestamps(true, true);
 

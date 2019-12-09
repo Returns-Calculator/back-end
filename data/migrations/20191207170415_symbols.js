@@ -7,7 +7,7 @@ exports.up = function(knex) {
       .notNullable()
       .unique();
 
-    symbols.date("last_refreshed");
+    symbols.date("last_refreshed").notNullable();
     symbols.timestamps(true, true);
   });
 };

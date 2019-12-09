@@ -10,7 +10,7 @@ exports.up = function(knex) {
       .inTable("users")
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
-    portfolios.string("name", 255);
+    portfolios.string("name", 255).notNullable();
     portfolios.timestamps(true, true);
 
     portfolios.unique(["user_id", "name"]);
