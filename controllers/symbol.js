@@ -41,6 +41,7 @@ router
     }
   });
 
+// Fuzzy search needed?
 router.route("/:symbol").get(async (req, res) => {
   const { symbol } = req.params;
   const search = await Symbols.find({ symbol: symbol.toUpperCase() }).first();
