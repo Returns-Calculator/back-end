@@ -1,5 +1,3 @@
-// id, symbol, last refreshed, created_at, updated_at
-
 const express = require("express");
 
 const Symbols = require("../models/symbols");
