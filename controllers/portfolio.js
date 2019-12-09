@@ -46,6 +46,7 @@ router
     if (success) {
       const { name } = req.body;
       try {
+        // check user_id/name combo for existence
         const exists = await Portfolios.find({ user_id, name }).first();
 
         if (exists && exists.id) {
@@ -54,7 +55,7 @@ router
               "A portfolio with this name has already been created for this user."
           });
         }
-
+        // check that user exists
         const user = await Users.find({ id: user_id }).first();
 
         if (user && user.id) {
@@ -74,7 +75,7 @@ router
     }
   });
 
-// get, update and delete goes here
+// get, update and delete by portfolio id
 router
   .route("/:id")
   .put(async (req, res) => {

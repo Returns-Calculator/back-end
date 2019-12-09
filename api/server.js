@@ -16,7 +16,7 @@ const authRouter = require("../controllers/auth");
 const portfoliosRouter = require("../controllers/portfolio");
 const symbolsRouter = require("../controllers/symbol");
 // const symbolsDetailsRouter = require("../controllers/symbol_detail");
-// const portfoliosSymbolsRouter = require("../controllers/portfolio_symbol");
+const portfoliosSymbolsRouter = require("../controllers/portfolio_symbol");
 
 // Internal middleware
 const errorHandler = require("../middleware/errorHandling");
@@ -27,7 +27,7 @@ server.use("/api/auth", authRouter);
 server.use("/api/portfolios", authenticate, portfoliosRouter);
 server.use("/api/symbols", authenticate, symbolsRouter);
 // server.use("/api/symbols_details", authenticate, symbolsDetailsRouter);
-// server.use("/api/portfolios_symbols", authenticate, portfoliosSymbolsRouter);
+server.use("/api/portfolios_symbols", authenticate, portfoliosSymbolsRouter);
 
 // sanity check
 server.get("/", (req, res) => {

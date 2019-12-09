@@ -25,7 +25,10 @@ router
             .status(409)
             .json({ message: "Symbol already exists in database" });
         } else {
-          const newSymbol = await Symbols.add({ symbol, last_refreshed });
+          const newSymbol = await Symbols.add({
+            symbol: symbol.toUpperCase(),
+            last_refreshed
+          });
           return res.status(201).json({ newSymbol });
         }
       } catch (err) {
@@ -39,7 +42,7 @@ router
     }
   });
 
-// Fuzzy search needed?
+// Fuzzy search needed? Already upper-casing symbol inputs
 router.route("/:symbol").get(async (req, res) => {
   const { symbol } = req.params;
   const search = await Symbols.find({ symbol: symbol.toUpperCase() }).first();

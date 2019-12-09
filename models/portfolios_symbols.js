@@ -21,6 +21,8 @@ function find(filters) {
       .leftJoin("symbols as s", "s.id", "p_s.symbol_id")
       .select(
         "p_s.id",
+        "p_s.portfolio_id",
+        "p_s.symbol_id",
         "p_s.created_at",
         "p_s.updated_at",
         "p.name",
@@ -28,13 +30,18 @@ function find(filters) {
       )
       .where(filters);
   }
-  return db("portfolios_symbols").select(
-    "p_s.id",
-    "p_s.created_at",
-    "p_s.updated_at",
-    "p.name",
-    "s.symbol"
-  );
+  return db("portfolios_symbols as p_s")
+    .leftJoin("portfolios as p", "p.id", "p_s.portfolio_id")
+    .leftJoin("symbols as s", "s.id", "p_s.symbol_id")
+    .select(
+      "p_s.id",
+      "p_s.portfolio_id",
+      "p_s.symbol_id",
+      "p_s.created_at",
+      "p_s.updated_at",
+      "p.name",
+      "s.symbol"
+    );
 }
 
 function update(filter, changes) {
@@ -47,7 +54,7 @@ function update(filter, changes) {
 
 function remove(filter) {
   // only returns the number of deleted entries
-  return db("portfolios_symbols")
+  return db("portfolios_symbols as p_s")
     .where(filter)
     .del();
 }
