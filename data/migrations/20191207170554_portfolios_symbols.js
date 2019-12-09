@@ -19,6 +19,8 @@ exports.up = function(knex) {
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
     portfolios_symbols.timestamps(true, true);
+
+    portfolios_symbols.unique(["portfolio_id", "symbol_id"]);
   });
 };
 

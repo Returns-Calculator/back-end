@@ -12,6 +12,8 @@ exports.up = function(knex) {
       .onUpdate("CASCADE");
     portfolios.string("name", 255);
     portfolios.timestamps(true, true);
+
+    portfolios.unique(["user_id", "name"]);
   });
 };
 

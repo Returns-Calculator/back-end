@@ -46,6 +46,15 @@ router
     if (success) {
       const { name } = req.body;
       try {
+        const exists = await Portfolios.find({ user_id, name }).first();
+
+        if (exists && exists.id) {
+          return res.status(409).json({
+            message:
+              "A portfolio with this name has already been created for this user."
+          });
+        }
+
         const user = await Users.find({ id: user_id }).first();
 
         if (user && user.id) {

@@ -16,6 +16,14 @@ function add(portfolio) {
 function find(filters) {
   // if filters were passed in, search by filter. otherwise return all records. column wise do not return passwords
   if (filters) {
+    // if name is passed in filters, check with case insensitivity on name only
+    if (filters.name) {
+      const { name, ...rest } = filters;
+      return db("portfolios")
+        .select("*")
+        .where(`name`, `ilike`, `${name}`)
+        .where(rest);
+    }
     return db("portfolios")
       .select("*")
       .where(filters);

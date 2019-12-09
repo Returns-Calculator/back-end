@@ -16,6 +16,8 @@ exports.up = function(knex) {
     symbols_details.decimal("dividend", null);
 
     symbols_details.timestamps(true, true);
+
+    symbols_details.unique(["symbol", "date"]);
   });
 };
 
