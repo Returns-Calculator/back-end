@@ -22,8 +22,8 @@ function validateUser(user) {
 }
 
 function filterUserPut(body) {
-  const { email, first_name, last_name } = body;
-  let filtered = { email, first_name, last_name };
+  const { email, first_name, last_name, AV_API_Key } = body;
+  let filtered = { email, first_name, last_name, AV_API_Key };
   for (const k of Object.keys(filtered)) {
     if (filtered[k] === undefined) delete filtered[k];
   }

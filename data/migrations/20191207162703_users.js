@@ -8,6 +8,7 @@ exports.up = function(knex) {
       .unique();
     users.string("first_name", 255);
     users.string("last_name", 255);
+    users.string("AV_API_Key", 255);
     users.timestamps(true, true);
   });
 };
