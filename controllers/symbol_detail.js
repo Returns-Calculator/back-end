@@ -2,10 +2,10 @@ const express = require("express");
 
 const Symbols = require("../models/symbols");
 const Symbols_Details = require("../models/symbols_details");
-// const {
-//   validateSymbolDetail,
-//   filterSymbolDetailPut
-// } = require("../entities/Symbol_Detail");
+const {
+  validateSymbolDetail,
+  filterSymbolDetailPut
+} = require("../entities/Symbol_Detail");
 
 const router = express.Router();
 
