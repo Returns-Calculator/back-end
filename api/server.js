@@ -13,6 +13,7 @@ const authenticate = require("../middleware/auth-middleware");
 // Routers
 const usersRouter = require("../controllers/user");
 const authRouter = require("../controllers/auth");
+const portfoliosRouter = require("../controllers/portfolio");
 
 // Internal middleware
 const errorHandler = require("../middleware/errorHandling");
@@ -20,6 +21,7 @@ const errorHandler = require("../middleware/errorHandling");
 // API endpoints
 server.use("/api/users", authenticate, usersRouter);
 server.use("/api/auth", authRouter);
+server.use("/api/portfolios", authenticate, portfoliosRouter);
 
 // sanity check
 server.get("/", (req, res) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const Users = require("../models/users");
-const { filterPutBody } = require("../entities/User");
+const { filterUserPut } = require("../entities/User");
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router
   .put(async (req, res) => {
     const { id } = req.params;
     try {
-      const changes = filterPutBody(req.body);
+      const changes = filterUserPut(req.body);
       if (Object.keys(changes).length === 0)
         return res.status(400).json({
           message:

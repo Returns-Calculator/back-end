@@ -1,6 +1,6 @@
 module.exports = {
   validateUser,
-  filterPutBody,
+  filterUserPut,
   mapPortfolio
 };
 
@@ -21,7 +21,7 @@ function validateUser(user) {
   };
 }
 
-function filterPutBody(body) {
+function filterUserPut(body) {
   const { email, first_name, last_name } = body;
   let filtered = { email, first_name, last_name };
   for (const k of Object.keys(filtered)) {
