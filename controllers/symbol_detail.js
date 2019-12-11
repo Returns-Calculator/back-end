@@ -27,12 +27,10 @@ router
       try {
         const exists = await Symbols_Details.find({ symbol, date }).first();
         if (exists && exists.id) {
-          return res
-            .status(409)
-            .json({
-              message:
-                "Symbol detail for that date already exists in database, please use put endpoint if you wish to update"
-            });
+          return res.status(409).json({
+            message:
+              "Symbol detail for that date already exists in database, please use put endpoint if you wish to update"
+          });
         } else {
           const newSymbolDetail = await Symbols_Details.add({
             symbol: symbol.toUpperCase(),
@@ -55,7 +53,7 @@ router
   });
 
 router
-  .route("/:symbol")
+  .route("/symbol/:symbol")
   .get(async (req, res) => {
     const { symbol } = req.params;
     const symbols_details = await Symbols_Details.find({
