@@ -26,7 +26,8 @@ function find(filters) {
         "p_s.created_at",
         "p_s.updated_at",
         "p.name",
-        "s.symbol"
+        "s.symbol",
+        "p_s.share_count"
       )
       .where(filters)
       .orderBy(["p.name", "s.symbol"]);
@@ -41,7 +42,8 @@ function find(filters) {
       "p_s.created_at",
       "p_s.updated_at",
       "p.name",
-      "s.symbol"
+      "s.symbol",
+      "p_s.share_count"
     )
     .orderBy(["p.name", "s.symbol"]);
 }

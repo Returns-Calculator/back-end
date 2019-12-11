@@ -18,6 +18,10 @@ exports.up = function(knex) {
       .inTable("symbols")
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
+    portfolios_symbols
+      .decimal("share_count", 10, 2)
+      .notNullable()
+      .defaultTo(0);
     portfolios_symbols.timestamps(true, true);
 
     portfolios_symbols.unique(["portfolio_id", "symbol_id"]);

@@ -43,7 +43,7 @@ router
   });
 
 // Fuzzy search needed? Already upper-casing symbol inputs
-router.route("/:symbol").get(async (req, res) => {
+router.route("/symbol/:symbol").get(async (req, res) => {
   const { symbol } = req.params;
   const search = await Symbols.find({ symbol: symbol.toUpperCase() }).first();
   if (search && search.id) {

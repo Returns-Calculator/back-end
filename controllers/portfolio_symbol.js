@@ -3,7 +3,10 @@ const express = require("express");
 const Portfolios_Symbols = require("../models/portfolios_symbols");
 const Portfolios = require("../models/portfolios");
 const Symbols = require("../models/symbols");
-const { validatePortfolioSymbol } = require("../entities/Portfolio_Symbol");
+const {
+  validatePortfolioSymbol,
+  filterPortfolioSymbolPut
+} = require("../entities/Portfolio_Symbol");
 
 const router = express.Router();
 
@@ -19,8 +22,9 @@ router
     const { message, errors, success } = validatePortfolioSymbol(req.body);
 
     if (success) {
-      const { portfolio_id, symbol_id } = req.body;
-      const postBody = { portfolio_id, symbol_id };
+      const { portfolio_id, symbol_id, share_count } = req.body;
+
+      const postBody = { portfolio_id, symbol_id, share_count };
       try {
         const exists = await Portfolios_Symbols.find(postBody).first();
         if (exists && exists.id) {
@@ -57,6 +61,38 @@ router
 // No put for the join table
 router
   .route("/:id")
+  .put(async (req, res) => {
+    const { id } = req.params;
+    try {
+      const changes = filterPortfolioSymbolPut(req.body);
+      if (Object.keys(changes).length === 0)
+        return res.status(400).json({
+          message: "Update request must contain share_count field"
+        });
+      if (typeof changes.share_count !== "number" || changes.share_count < 0)
+        return res.status(400).json({
+          message: "*share_count* field must be a positive decimal"
+        });
+      const portfolioSymbolExists = await Portfolios_Symbols.find({
+        "p_s.id": id
+      }).first();
+      if (!portfolioSymbolExists) {
+        return res.status(404).json({
+          message:
+            "That portfolio symbol relationship does not exist in the portfolio."
+        });
+      } else {
+        const updated = await Portfolios_Symbols.update({ id }, changes);
+        return res.status(200).json({ updated });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        error:
+          "There was an error while updating the portfolio symbol relationship"
+      });
+    }
+  })
   .delete(async (req, res) => {
     const { id } = req.params;
 
