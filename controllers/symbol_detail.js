@@ -52,16 +52,25 @@ router.route("/:symbol").post(async (req, res) => {
   // Get symbol price history from req.body, get current records for symbol
   const alphaVantageHistory = req.body;
   const databaseHistory = await Symbols_Details.find({ symbol });
-
+  // Helper to separate records that need to be added from recs that need to be updated
   const [addArray, updateArray, notUpdated] = parseDetails(
     alphaVantageHistory,
     databaseHistory
   );
+  console.log(addArray, updateArray, notUpdated);
+  // DB operations
+  let addedDetails = [];
+  if (addArray.length > 0)
+    addedDetails = await Symbols_Details.addMany(addArray);
+  let updatedDetails = [];
+  for (const i of updateArray) {
+    updatedDetails.push(
+      await Symbols_Details.update({ symbol: i.symbol, date: i.date }, i)
+    );
+  }
 
-  // console.log(addArray, updateArray, notUpdated);
-  return res.status(200).json({ addArray, updateArray, notUpdated });
-
-  // add and update records accordingly
+  // return activity summary
+  return res.status(200).json({ addedDetails, updatedDetails, notUpdated });
 });
 
 module.exports = router;

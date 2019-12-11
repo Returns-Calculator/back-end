@@ -56,7 +56,6 @@ function parseDetails(alphaVantageHistory, databaseHistory) {
   const data = alphaVantageHistory["Monthly Adjusted Time Series"];
   const symbol = alphaVantageHistory["Meta Data"]["2. Symbol"];
   const thisMonth = getTodayDate()[1];
-  console.log(databaseHistory);
 
   let addArray = [];
   let updateArray = [];
@@ -86,7 +85,6 @@ function parseDetails(alphaVantageHistory, databaseHistory) {
       }
       // If in databaseHistory but different, push to updateArray
       else if (deepCompareObj(record, dbHistoryObj[i]) === false) {
-        console.log(record, dbHistoryObj[i]);
         updateArray.push(record);
       }
       // Otherwise add to notUpdated array
