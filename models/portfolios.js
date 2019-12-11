@@ -22,7 +22,8 @@ function find(filters) {
       return db("portfolios")
         .select("*")
         .where(`name`, `ilike`, `${name}`)
-        .where(rest);
+        .where(rest)
+        .orderBy("user_id", "name");
     }
     return db("portfolios")
       .select("*")

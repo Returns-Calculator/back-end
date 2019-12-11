@@ -28,7 +28,8 @@ function find(filters) {
         "p.name",
         "s.symbol"
       )
-      .where(filters);
+      .where(filters)
+      .orderBy(["p.name", "s.symbol"]);
   }
   return db("portfolios_symbols as p_s")
     .leftJoin("portfolios as p", "p.id", "p_s.portfolio_id")
@@ -41,7 +42,8 @@ function find(filters) {
       "p_s.updated_at",
       "p.name",
       "s.symbol"
-    );
+    )
+    .orderBy(["p.name", "s.symbol"]);
 }
 
 function update(filter, changes) {

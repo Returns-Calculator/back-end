@@ -17,7 +17,10 @@ function add(symbol_detail) {
 function addMany(symbol_details) {
   return db("symbols_details")
     .insert(symbol_details, ["*"])
-    .then(s_ds => find({ many_ids: s_ds }));
+    .then(s_ds => {
+      let ids = s_ds.map(detail => detail.id);
+      return find({ many_ids: ids });
+    });
 }
 
 function find(filters) {
@@ -27,13 +30,17 @@ function find(filters) {
     if (filters.many_ids) {
       return db("symbols_details")
         .select("*")
-        .whereIn("id", filters.many_ids);
+        .whereIn("id", filters.many_ids)
+        .orderBy(["symbol", { column: "date", order: "desc" }]);
     }
     return db("symbols_details")
       .select("*")
-      .where(filters);
+      .where(filters)
+      .orderBy(["symbol", { column: "date", order: "desc" }]);
   }
-  return db("symbols_details").select("*");
+  return db("symbols_details")
+    .select("*")
+    .orderBy(["symbol", { column: "date", order: "desc" }]);
 }
 
 function update(filter, changes) {

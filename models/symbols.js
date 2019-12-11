@@ -18,9 +18,12 @@ function find(filters) {
   if (filters) {
     return db("symbols")
       .select("*")
-      .where(filters);
+      .where(filters)
+      .orderBy("symbol");
   }
-  return db("symbols").select("*");
+  return db("symbols")
+    .select("*")
+    .orderBy("symbol");
 }
 
 function update(filter, changes) {

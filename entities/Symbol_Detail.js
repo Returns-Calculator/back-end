@@ -61,12 +61,13 @@ function parseDetails(alphaVantageHistory, databaseHistory) {
   let updateArray = [];
   let notUpdated = [];
 
+  // Create object for databaseHistory for deep compare
   const dbHistoryObj = {};
 
-  // Create object for databaseHistory for deep compare
   for (const i of databaseHistory) {
     const { id, created_at, updated_at, ...record } = i;
     dbHistoryObj[record.date] = record;
+    dbHistoryObj[`${record.date}id`] = id;
   }
 
   for (const i in data) {
@@ -79,6 +80,7 @@ function parseDetails(alphaVantageHistory, databaseHistory) {
         close: data[i]["4. close"],
         dividend: data[i]["7. dividend amount"]
       };
+
       // If not in databaseHistory, push to addArray
       if (!dbHistoryObj[i]) {
         addArray.push(record);
@@ -88,7 +90,10 @@ function parseDetails(alphaVantageHistory, databaseHistory) {
         updateArray.push(record);
       }
       // Otherwise add to notUpdated array
-      else notUpdated.push(record);
+      else {
+        const doNotUpdate = { id: dbHistoryObj[`${i}id`], ...record };
+        notUpdated.push(doNotUpdate);
+      }
     }
   }
 

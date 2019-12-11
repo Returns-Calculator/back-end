@@ -18,9 +18,12 @@ function find(filters) {
   if (filters) {
     return db("users")
       .select("*")
-      .where(filters);
+      .where(filters)
+      .orderBy("id");
   }
-  return db("users").select("*");
+  return db("users")
+    .select("*")
+    .orderBy("id");
 }
 
 function update(filter, changes) {
