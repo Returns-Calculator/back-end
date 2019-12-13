@@ -5,6 +5,7 @@ const Portfolios_Symbols = require("../models/portfolios_symbols");
 const Symbols = require("../models/symbols");
 const Symbols_Details = require("../models/symbols_details");
 const {
+  getDates,
   calculateReturns,
   calculatePortfolioReturns
 } = require("../entities/Returns");
@@ -21,7 +22,9 @@ router.route("/symbol/:symbol").get(async (req, res) => {
       message: "The symbol provided does not exist."
     });
   }
-  const history = await Symbols_Details.find({ symbol });
+  // Get most recent month as -mm- stub and find records from that month and -12-'s
+  const [lm_date] = getDates();
+  const history = await Symbols_Details.find({ symbol, lm_date });
   if (!history) {
     return res.status(404).json({
       message: "There is no price history detail for this symbol."
@@ -42,14 +45,18 @@ router.route("/portfolio/:id").get(async (req, res) => {
       message: "The portfolio provided does not exist."
     });
   }
-  const portfolioHoldings = await Portfolios_Symbols.find({
+  // Get most recent month as -mm- stub and find records from that month and -12-'s
+  const [lm_date] = getDates();
+  // Get portfolio symbols for DB call
+  const portHoldings = await Portfolios_Symbols.find({
     "p_s.portfolio_id": id
   });
-  const holdingSymbols = portfolioHoldings.map(holding => holding.symbol);
-  const portfolioHistory = await Symbols_Details.find({
+  const holdingSymbols = portHoldings.map(holding => holding.symbol);
+  const portHistory = await Symbols_Details.find({
+    lm_date,
     many_symbols: holdingSymbols
   });
-  const result = calculatePortfolioReturns(portfolioHoldings, portfolioHistory);
+  const result = calculatePortfolioReturns(portHoldings, portHistory);
   if (result.message) {
     const { message } = result;
     return res.status(404).json({ message });

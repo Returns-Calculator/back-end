@@ -1,4 +1,5 @@
 module.exports = {
+  getDates,
   calculateReturns,
   calculatePortfolioReturns
 };
@@ -42,10 +43,8 @@ function calculate(arr, date, lastMonthAdjPrice, years = 1) {
 function calculateReturns(history) {
   // Data from latest month end, so need last month
   const [lm, lmr, begYear, oneY, threeY, fiveY, tenY] = getDates();
-  // filter history to reduce .find run times on remaining functions
-  const filtered = history.filter(history => history.date.includes(lm));
   // find most recent month end record as base for calculating returns
-  const lastMonthRecord = filtered.find(his => his.date.includes(lmr));
+  const lastMonthRecord = history.find(his => his.date.includes(lmr));
   let lastMonthAdjPrice = null;
   if (lastMonthRecord) {
     lastMonthAdjPrice = lastMonthRecord.adjusted_close;
@@ -57,20 +56,19 @@ function calculateReturns(history) {
     };
   }
   const YTD = calculate(history, begYear, lastMonthAdjPrice);
-  const oneYear = calculate(filtered, oneY, lastMonthAdjPrice);
-  const threeYear = calculate(filtered, threeY, lastMonthAdjPrice, 3);
-  const fiveYear = calculate(filtered, fiveY, lastMonthAdjPrice, 5);
-  const tenYear = calculate(filtered, tenY, lastMonthAdjPrice, 10);
+  const oneYear = calculate(history, oneY, lastMonthAdjPrice);
+  const threeYear = calculate(history, threeY, lastMonthAdjPrice, 3);
+  const fiveYear = calculate(history, fiveY, lastMonthAdjPrice, 5);
+  const tenYear = calculate(history, tenY, lastMonthAdjPrice, 10);
 
   return { YTD, oneYear, threeYear, fiveYear, tenYear };
 }
 
-function calculatePortfolioReturns(portfolioHoldings, portfolioHistory) {
+function calculatePortfolioReturns(portHoldings, portHistory) {
   // Data from latest month end, so need last month
   const [lm, lmr, begYear, oneY, threeY, fiveY, tenY] = getDates();
 
-  const filtered = portfolioHistory.filter(his => his.date.includes(lm));
-
   let YTD, oneYear, threeYear, fiveYear, tenYear;
-  return { YTD, oneYear, threeYear, fiveYear, tenYear };
+  // return { YTD, oneYear, threeYear, fiveYear, tenYear };
+  return { portHoldings, portHistory };
 }

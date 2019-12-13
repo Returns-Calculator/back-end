@@ -33,6 +33,28 @@ function find(filters) {
         .whereIn("id", filters.many_ids)
         .orderBy(["symbol", { column: "date", order: "desc" }]);
     }
+    // if passing in stub month and symbols, chain whereIn into orWhere
+    if (filters.lm_date && filters.many_symbols) {
+      return db("symbols_details")
+        .select("*")
+        .whereIn("symbol", filters.many_symbols)
+        .andWhere(function() {
+          this.where("date", `like`, `%${filters.lm_date}%`).orWhere(
+            "date",
+            `like`,
+            `%-12-%`
+          );
+        })
+        .orderBy(["symbol", { column: "date", order: "desc" }]);
+    }
+    // if passing in stub month, use like check to find records containing the month
+    if (filters.lm_date) {
+      return db("symbols_details")
+        .select("*")
+        .where("date", `like`, `%${filters.lm_date}%`)
+        .orWhere("date", `like`, `%-12-%`)
+        .orderBy(["symbol", { column: "date", order: "desc" }]);
+    }
     // if passing in many symbols as an array, use whereIn. Used in returns calculation
     if (filters.many_symbols) {
       return db("symbols_details")
