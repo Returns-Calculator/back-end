@@ -1,10 +1,25 @@
 module.exports = {
-  calculateReturns
+  getLastMonth,
+  calculateReturns,
+  calculatePortfolioReturns
 };
 
-function calculateReturns(history) {
-  const [thisMonth, lastMonth, lastMonthYear] = getCurrentMonth();
+function getLastMonth() {
+  // Date calculation
   // ex: thisMonth is 2019-11, lastMonth is 10, lastMonthYear is 2019
+  // ex: thisMonth is 2019-01, lastMonth is 12, lastMonthYear is 2018
+  let thisMonth = new Date();
+  let lastMonthYear = thisMonth.getFullYear();
+  let lastMonth = String(thisMonth.getMonth()).padStart(2, "0");
+  if (String(thisMonth.getMonth()) === "0") {
+    lastMonth = 12;
+    lastMonthYear -= 1;
+  }
+
+  return [lastMonth, lastMonthYear];
+}
+
+function calculateReturns(history, lastMonth, lastMonthYear) {
   const lastMonthRecord = history.find(his =>
     his.date.includes(`${lastMonthYear}-${lastMonth}`)
   );
@@ -58,19 +73,11 @@ function calculateReturns(history) {
   return { YTD, oneYear, threeYear, fiveYear, tenYear };
 }
 
-function getCurrentMonth() {
-  // Date calculation
-  let thisMonth = new Date();
-  let mm = String(thisMonth.getMonth() + 1).padStart(2, "0"); //January is 0!
-  let thisYear = thisMonth.getFullYear();
-  let lastMonthYear = thisMonth.getFullYear();
-  let lastMonth = String(thisMonth.getMonth()).padStart(2, "0");
-  if (String(thisMonth.getMonth()) === "0") {
-    lastMonth = 12;
-    lastMonthYear -= 1;
-  }
-
-  thisMonth = thisYear + "-" + mm;
-
-  return [thisMonth, lastMonth, lastMonthYear];
+function calculatePortfolioReturns(
+  portfolioHoldings,
+  portfolioHistory,
+  lastMonth,
+  lastMonthYear
+) {
+  let YTD, oneYear, threeYear, fiveYear, tenYear;
 }

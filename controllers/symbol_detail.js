@@ -67,11 +67,16 @@ router
   .post(async (req, res) => {
     const { symbol } = req.params;
     // Check that symbol exists, add if not
-    const symbolExists = await Symbols.find({ symbol }).first();
+    const symbolExists = await Symbols.find({
+      symbol: symbol.toUpperCase()
+    }).first();
     const last_refreshed = getTodayDate()[0];
     // if symbol exists, update last_refreshed, if not, add symbol
     if (symbolExists) {
-      const update = await Symbols.update({ symbol }, { last_refreshed });
+      const update = await Symbols.update(
+        { symbol: symbol.toUpperCase() },
+        { last_refreshed }
+      );
       console.log("Symbol updated", update);
     }
     if (!symbolExists) {

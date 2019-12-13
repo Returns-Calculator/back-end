@@ -33,6 +33,13 @@ function find(filters) {
         .whereIn("id", filters.many_ids)
         .orderBy(["symbol", { column: "date", order: "desc" }]);
     }
+    // if passing in many symbols as an array, use whereIn. Used in returns calculation
+    if (filters.many_symbols) {
+      return db("symbols_details")
+        .select("*")
+        .whereIn("symbol", filters.many_symbols)
+        .orderBy(["symbol", { column: "date", order: "desc" }]);
+    }
     return db("symbols_details")
       .select("*")
       .where(filters)
