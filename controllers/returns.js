@@ -4,30 +4,30 @@ const Portfolios = require("../models/portfolios");
 const Portfolios_Symbols = require("../models/portfolios_symbols");
 const Symbols = require("../models/symbols");
 const Symbols_Details = require("../models/symbols_details");
-const { calculateReturns, getLastMonth } = require("../entities/Returns");
+const {
+  calculateReturns,
+  calculatePortfolioReturns
+} = require("../entities/Returns");
 
 const router = express.Router();
 
 router.route("/symbol/:symbol").get(async (req, res) => {
-  // Data from latest month end, so need last month
-  const [lastMonth, lastMonthYear] = getLastMonth();
-
-  const { symbol } = req.params;
-  const symbolExists = await Symbols.find({
-    symbol: symbol.toUpperCase()
-  }).first();
+  let { symbol } = req.params;
+  symbol = symbol.toUpperCase();
+  // Confirm symbol exists in database and that there's price history detail available
+  const symbolExists = await Symbols.find({ symbol }).first();
   if (!symbolExists) {
     return res.status(404).json({
       message: "The symbol provided does not exist."
     });
   }
-  const history = await Symbols_Details.find({ symbol: symbol.toUpperCase() });
+  const history = await Symbols_Details.find({ symbol });
   if (!history) {
     return res.status(404).json({
       message: "There is no price history detail for this symbol."
     });
   }
-  const result = calculateReturns(history, lastMonth, lastMonthYear);
+  const result = calculateReturns(history);
   if (result.message) {
     const { message } = result;
     return res.status(404).json({ message });
@@ -35,9 +35,6 @@ router.route("/symbol/:symbol").get(async (req, res) => {
 });
 
 router.route("/portfolio/:id").get(async (req, res) => {
-  // Data from latest month end, so need last month
-  const [lastMonth, lastMonthYear] = getLastMonth();
-
   const { id } = req.params;
   const portfolioExists = await Portfolios.find({ id }).first();
   if (!portfolioExists) {
@@ -52,7 +49,11 @@ router.route("/portfolio/:id").get(async (req, res) => {
   const portfolioHistory = await Symbols_Details.find({
     many_symbols: holdingSymbols
   });
-  return res.status(200).json({ portfolioHistory });
+  const result = calculatePortfolioReturns(portfolioHoldings, portfolioHistory);
+  if (result.message) {
+    const { message } = result;
+    return res.status(404).json({ message });
+  } else return res.status(200).json({ result });
 });
 
 module.exports = router;
